@@ -1,0 +1,16 @@
+{
+  "firstName": "Michał",
+  "lastName": "Wonsacz",
+  "emailAdress": "wonsacz3@gmail.com",
+  "telephoneNumber": "999999999",
+  "faxAddress": "aaaa",
+  "companyName": "TestCompany",
+  "address": "LondynTestStreet 1",
+  "city": "London",
+  "country": "United Kingdom",
+  "zipCode": "10-101",
+  "region": "Cardiff",
+  "login": "TestLogin3",
+  "password": "Test1234",
+  "passwordConf": "Test1234"
+}
