@@ -1,6 +1,7 @@
 import Homepage_PO from '../pageObjects/Homepage_PO'
 import Loginpage_PO from '../pageObjects/Loginpage_PO'
 import Registerpage_PO from '../pageObjects/Registerpage_PO'
+import Contact_Us_PO from '../pageObjects/Contact_Us_PO'
 /// <reference types="cypress" />
 
 
@@ -39,8 +40,8 @@ describe("Registration Tests", () => {
 
 describe("Login tests", () => {
 
-const homepage_PO = new Homepage_PO();
-const loginpage_PO = new Loginpage_PO();  
+  const homepage_PO = new Homepage_PO();
+  const loginpage_PO = new Loginpage_PO();
 
   before(function () {
     cy.fixture("example").then(function (data) {
@@ -73,3 +74,28 @@ const loginpage_PO = new Loginpage_PO();
 
   });
 });
+
+
+describe("Contact Us tests", () => {
+
+  const homepage_PO = new Homepage_PO();
+  const contact_Us_PO = new Contact_Us_PO();
+
+  beforeEach(function () {
+    cy.clearLocalStorage();
+    cy.clearCookies();
+    homepage_PO.accessHomepage();
+    homepage_PO.clickOn_Contact_Us_Link();
+  });
+
+  it("Valid contact us form submission", () => {
+    contact_Us_PO.submitForm("Lucas", "lucas@gmail.com", "Do you provide any discounts?")
+    cy.get(".mb40 > :nth-child(3)").should('contain', "Your enquiry has been successfully sent to the store owner!")
+  });
+
+  it("Invalid contact us form submission - missing email", () => {
+    contact_Us_PO.submitForm("Lucas", " ", "Do you provide any discounts?")
+    cy.get(".element_error").should('contain', "Email: is required field! E-Mail Address does not appear to be valid!")
+  });
+});
+
