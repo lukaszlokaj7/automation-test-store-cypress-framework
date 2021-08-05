@@ -1,6 +1,6 @@
 class Loginpage_Po {
 
-    accountRegistration(firstName, lastName, emailAdress, telephoneNumber, faxAddress, companyName, address, city, country, zipCode, region, login, password, passwordConf ){
+    accountRegistration(firstName, lastName, emailAdress, telephoneNumber, faxAddress, companyName, address, city, country, zipCode, region, login, password, passwordConf) {
         cy.get('#AccountFrm_firstname').type(firstName)
         cy.get('#AccountFrm_lastname').type(lastName)
         cy.get('#AccountFrm_email').type(emailAdress)
@@ -20,5 +20,12 @@ class Loginpage_Po {
         cy.contains('Continue').click()
     }
 
+    getValidRegisterMessage() {
+        return cy.get('.maintext')
+    }
+
+    getRegisterError() {
+        return cy.get('.alert')
+    }
 }
 export default Loginpage_Po;

@@ -1,0 +1,12 @@
+class Hair_Care_Po {
+
+    addSpecificProductToCart(product_name) {
+        cy.get(".fixed_wrapper .prdocutname").each(($el, index, $list) => {
+            if ($el.text().includes(product_name)) {
+                cy.get('.productcart').eq(index).click();
+            }
+
+        })
+    };
+}
+export default Hair_Care_Po;
