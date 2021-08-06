@@ -3,6 +3,7 @@ import Loginpage_PO from '../pageObjects/Loginpage_PO'
 import Registerpage_PO from '../pageObjects/Registerpage_PO'
 import Contact_Us_PO from '../pageObjects/Contact_Us_PO'
 import Hair_Care_PO from '../pageObjects/Hair_Care_PO'
+import Cart_PO from '../pageObjects/Cart_PO'
 /// <reference types="cypress" />
 
 let randomString = Math.random().toString(36).substring(2);
@@ -31,7 +32,7 @@ describe("Registration Tests", () => {
 
   it("Valid registration", () => {
     registerpage_PO.accountRegistration(data.firstName, data.lastName, email, data.telephoneNumber, data.faxAddress, data.companyName, data.address, data.city, data.country, data.zipCode, data.region, login, data.password, data.passwordConf)
-    registerpage_PO.getValidRegisterMessage().should('contain','Your Account Has Been Created!')
+    registerpage_PO.getValidRegisterMessage().should('contain', 'Your Account Has Been Created!')
   });
 
   it("Invalid registration - missing login and email", () => {
@@ -113,6 +114,7 @@ describe("Hair care products tests", () => {
 
   const homepage_PO = new Homepage_PO();
   const hair_Care_PO = new Hair_Care_PO();
+  const cart_PO = new Cart_PO();
 
   beforeEach(function () {
     cy.clearLocalStorage();
@@ -123,6 +125,11 @@ describe("Hair care products tests", () => {
 
   it("Add specific product to basket", () => {
     hair_Care_PO.addSpecificProductToCart('Eau Parfumee au The Vert Shampoo')
+    homepage_PO.getCartTotalValue().should('contain', '$31.00')
+    homepage_PO.clickOn_Cart()
+    cart_PO.getItemTotalPrice().should('contain', '$31.00')
+    cart_PO.getOrderTotalPrice().should('contain', '$31.00')
+    cart_PO.getItemsQuantity().should('have.value', '1')
   });
 
 });

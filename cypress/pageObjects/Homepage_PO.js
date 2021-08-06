@@ -1,5 +1,7 @@
+
+
 class Homepage_Po {
-    
+
     accessHomepage() {
         cy.visit("https://www.automationteststore.com/")
     };
@@ -18,5 +20,15 @@ class Homepage_Po {
         cy.get("a[href*='product/category&path=']").contains("Hair Care").click();
         cy.url().should('contain', '?rt=product/category&path=52')
     };
+
+    clickOn_Cart(){
+        cy.get(".cart_total").click()
+    };
+
+    getCartTotalValue() {
+        return cy.get(".cart_total")
+    };
+
+
 }
 export default Homepage_Po;

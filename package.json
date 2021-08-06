@@ -4,7 +4,10 @@
   "description": "Cypress Framework",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "triggerTestsHeadless": "npx cypress run",
+    "triggerTestsHeaddedChrome": "npx cypress run --headed --browser chrome",
+    "triggerTestsHeaddedFirefox": "npx cypress run --headed --browser firefox",
+    "triggerTestsHeaddedEdge": "npx cypress run --headed --browser edge"
   },
   "author": "Łukasz Łokaj",
   "license": "ISC",
