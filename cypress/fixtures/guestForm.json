@@ -1,0 +1,9 @@
+{
+    "firstName": "John",
+    "lastName": "Cole",
+    "email": "testemail@gmail.com",
+    "address1": "TestStreet 1/27",
+    "city": "London",
+    "zipCode": "35-999",
+    "region": "Bridgend"
+  }

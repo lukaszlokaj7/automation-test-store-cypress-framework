@@ -1,5 +1,10 @@
 
 class Cart_Po {
+    goToOrderCheckout() {
+        cy.get("#cart_checkout1").click()
+        cy.url().should('contain', '?rt=account/login')
+    }
+
     getItemTotalPrice() {
         return cy.get("tr:nth-of-type(2) > td:nth-of-type(6)")
     }

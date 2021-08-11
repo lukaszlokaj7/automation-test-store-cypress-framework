@@ -14,5 +14,11 @@ class Loginpage_Po {
     getLoginError() {
         return cy.get('.alert')
     }
+
+    goToCheckoutAsQuestUser() {
+        cy.get("#accountFrm_accountguest").click()
+        cy.get("button[title='Continue']").click()
+        cy.url().should('contain', '?rt=checkout/guest_step_1')
+    }
 }
 export default Loginpage_Po;

@@ -7,12 +7,12 @@ class Contact_Us_Po {
         cy.get("button[title='Submit']").click();
     }
 
-    getValidMessage(){
-       return cy.get(".mb40 > :nth-child(3)")
+    getValidMessage() {
+        return cy.get(".mb40 > :nth-child(3)")
     }
 
-    getErrorMessage(){
-       return cy.get(".element_error")
+    getErrorMessage() {
+        return cy.get(".element_error")
     }
 }
 export default Contact_Us_Po;

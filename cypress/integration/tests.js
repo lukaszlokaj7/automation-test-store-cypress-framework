@@ -4,16 +4,23 @@ import Registerpage_PO from '../pageObjects/Registerpage_PO'
 import Contact_Us_PO from '../pageObjects/Contact_Us_PO'
 import Hair_Care_PO from '../pageObjects/Hair_Care_PO'
 import Cart_PO from '../pageObjects/Cart_PO'
+import Checkout_PO from '../pageObjects/Checkout_PO'
+
 /// <reference types="cypress" />
 
 let randomString = Math.random().toString(36).substring(2);
 let login = 'Test_' + randomString;
 let email = 'Test_' + randomString + '@gmail.com';
 
+const homepage_PO = new Homepage_PO();
+const loginpage_PO = new Loginpage_PO();
+const registerpage_PO = new Registerpage_PO();
+const contact_Us_PO = new Contact_Us_PO();
+const hair_Care_PO = new Hair_Care_PO();
+const cart_PO = new Cart_PO();
+const checkout_PO = new Checkout_PO();
+
 describe("Registration Tests", () => {
-  const homepage_PO = new Homepage_PO();
-  const loginpage_PO = new Loginpage_PO();
-  const registerpage_PO = new Registerpage_PO();
 
   before(function () {
     cy.fixture("example").then(function (data) {
@@ -47,9 +54,6 @@ describe("Registration Tests", () => {
 
 describe("Login tests", () => {
 
-  const homepage_PO = new Homepage_PO();
-  const loginpage_PO = new Loginpage_PO();
-
   before(function () {
     cy.fixture("example").then(function (data) {
       //this.data = data;
@@ -65,7 +69,7 @@ describe("Login tests", () => {
   });
 
   it("Valid login test", () => {
-    loginpage_PO.loginToApplication(login, data.password)
+    loginpage_PO.loginToApplication('Test_59pdk0p711h', 'Test1234')
     cy.url().should('contain', '?rt=account/account')
   });
 
@@ -80,15 +84,18 @@ describe("Login tests", () => {
     loginpage_PO.getLoginError().should('contain', 'Error: Incorrect login or password provided.')
 
   });
+
+  it("Invalid login test - unregistered user", () => {
+    loginpage_PO.loginToApplication('UnregisteredTest123', data.password)
+    loginpage_PO.getLoginError().should('contain', 'Error: Incorrect login or password provided.')
+
+  });
 });
 
 
 
 
 describe("Contact Us tests", () => {
-
-  const homepage_PO = new Homepage_PO();
-  const contact_Us_PO = new Contact_Us_PO();
 
   beforeEach(function () {
     cy.clearLocalStorage();
@@ -111,10 +118,21 @@ describe("Contact Us tests", () => {
 
 
 describe("Hair care products tests", () => {
+  const productName = 'Eau Parfumee au The Vert Shampoo'
 
-  const homepage_PO = new Homepage_PO();
-  const hair_Care_PO = new Hair_Care_PO();
-  const cart_PO = new Cart_PO();
+  before(function () {
+    cy.fixture("guestForm").then(function (data) {
+      //this.data = data;
+      globalThis.data = data;
+
+    });
+
+    cy.fixture("example").then(function (data2) {
+      //this.data = data;
+      globalThis.data2 = data2;
+
+    });
+  });
 
   beforeEach(function () {
     cy.clearLocalStorage();
@@ -123,13 +141,44 @@ describe("Hair care products tests", () => {
     homepage_PO.clickOn_Hair_Care_Link();
   });
 
-  it("Add specific product to basket", () => {
-    hair_Care_PO.addSpecificProductToCart('Eau Parfumee au The Vert Shampoo')
+  it("Add specific product to basket and checout as guest user", () => {
+    hair_Care_PO.addSpecificProductToCart(productName)
     homepage_PO.getCartTotalValue().should('contain', '$31.00')
     homepage_PO.clickOn_Cart()
     cart_PO.getItemTotalPrice().should('contain', '$31.00')
     cart_PO.getOrderTotalPrice().should('contain', '$31.00')
     cart_PO.getItemsQuantity().should('have.value', '1')
+    cart_PO.goToOrderCheckout()
+    loginpage_PO.goToCheckoutAsQuestUser()
+    checkout_PO.submitCheckoutAsGuest(data.firstName, data.lastName, data.email, data.address1, data.city, data.region, data.zipCode)
+    checkout_PO.validateCheckoutAddressAndConfirm(data.firstName, data.lastName, data.address1, data.city, data.region, data.zipCode)
+    checkout_PO.getTextAfterCheckout().should('contain', ' Your Order Has Been Processed!')
+  });
+
+  it("Add specific product to basket and invalid checout as guest user - missing zipCode", () => {
+    hair_Care_PO.addSpecificProductToCart(productName)
+    homepage_PO.getCartTotalValue().should('contain', '$31.00')
+    homepage_PO.clickOn_Cart()
+    cart_PO.getItemTotalPrice().should('contain', '$31.00')
+    cart_PO.getOrderTotalPrice().should('contain', '$31.00')
+    cart_PO.getItemsQuantity().should('have.value', '1')
+    cart_PO.goToOrderCheckout()
+    loginpage_PO.goToCheckoutAsQuestUser()
+    checkout_PO.submitCheckoutAsGuest(data.firstName, data.lastName, data.email, data.address1, data.city, data.region, ' ')
+    checkout_PO.getMissingZipCodeMessage().should('contain', 'Zip/postal code must be between 3 and 10 characters!')
+  });
+
+  it("Add specific product to basket and checout as registered user", () => {
+    hair_Care_PO.addSpecificProductToCart(productName)
+    homepage_PO.getCartTotalValue().should('contain', '$31.00')
+    homepage_PO.clickOn_Cart()
+    cart_PO.getItemTotalPrice().should('contain', '$31.00')
+    cart_PO.getOrderTotalPrice().should('contain', '$31.00')
+    cart_PO.getItemsQuantity().should('have.value', '1')
+    cart_PO.goToOrderCheckout()
+    loginpage_PO.loginToApplication('Test_59pdk0p711h', 'Test1234')
+    checkout_PO.validateCheckoutAddressAndConfirm(data2.firstName, data2.lastName, data2.address, data2.city, data2.region, data2.zipCode)
+    checkout_PO.getTextAfterCheckout().should('contain', ' Your Order Has Been Processed!')
   });
 
 });

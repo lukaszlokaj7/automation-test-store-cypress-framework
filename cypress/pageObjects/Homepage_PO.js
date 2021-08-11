@@ -21,7 +21,7 @@ class Homepage_Po {
         cy.url().should('contain', '?rt=product/category&path=52')
     };
 
-    clickOn_Cart(){
+    clickOn_Cart() {
         cy.get(".cart_total").click()
     };
 
